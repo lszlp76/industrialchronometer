@@ -78,14 +78,14 @@
       "size" : "64x64"
     },
     {
-      "filename" : "Icon-196.png",
+      "filename" : "logow192.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "3x",
       "size" : "64x64"
     },
     {
-      "filename" : "Icon-128 1.png",
+      "filename" : "logow136.png",
       "idiom" : "universal",
       "platform" : "ios",
       "scale" : "2x",

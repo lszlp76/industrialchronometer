@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //launch screen açılışta bekleme süresi
 
-      Thread.sleep(forTimeInterval: 2)
+     Thread.sleep(forTimeInterval: 2)
    
         //red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
         UINavigationBar.appearance().barTintColor = UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)

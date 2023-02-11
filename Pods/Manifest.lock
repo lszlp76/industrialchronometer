@@ -3,28 +3,24 @@ PODS:
     - Charts/Core (= 4.1.0)
   - Charts/Core (4.1.0):
     - SwiftAlgorithms (~> 1.0)
-  - DLRadioButton (1.4.12)
   - SwiftAlgorithms (1.0.0)
   - TinyConstraints (4.0.2)
 
 DEPENDENCIES:
   - Charts
-  - DLRadioButton (~> 1.4)
   - TinyConstraints
 
 SPEC REPOS:
   trunk:
     - Charts
-    - DLRadioButton
     - SwiftAlgorithms
     - TinyConstraints
 
 SPEC CHECKSUMS:
   Charts: 354f86803d11d9c35de280587fef50d1af063978
-  DLRadioButton: d7c4e225ed0e8013cef7be61455230c7557ad7c1
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   TinyConstraints: 7b7ccc0c485bb3bb47082138ff28bc33cd49897f
 
-PODFILE CHECKSUM: cd93ec5e68ffa41b623b6d3c45d69a02c26e1aa4
+PODFILE CHECKSUM: 222a1d6e9126b0bba670d3b8b00186827ef26d28
 
 COCOAPODS: 1.11.0.beta.1

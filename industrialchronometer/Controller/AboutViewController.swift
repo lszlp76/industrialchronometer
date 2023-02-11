@@ -28,11 +28,6 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
         
         
         self.settingIcon.append(Section(title: "Settings", option: [
-            
-        
-            
-            
-            
                                                                     SettingIcon(label: "Screen saver on",icon: UIImage(systemName: "display"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true), SettingIcon(label: "Time unit second",icon: UIImage(systemName: "s.circle.fill"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true),
                                                                     SettingIcon(label: "Time unit hunderths of minute",icon: UIImage(named: "cmin"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true),
           SettingIcon(label: "Pause lap active",icon: UIImage(systemName:"timelapse"), iconBackgroundColor: UIColor.blue,width: 20.0,heigth: 20.0, handler: { },switchHide: true)
@@ -112,12 +107,13 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
           
             }
         case 1 :
-         
+            cell?.toggleSwitch.isHidden = false
             if userDefaults.getValueForSwitch(keyName: "SecondUnit") == true {
                 cell?.toggleSwitch.setOn(true, animated: false)
 
             }else {
                 cell?.toggleSwitch.setOn(false, animated: false)
+                
             }
         case 2 :
            
@@ -154,7 +150,11 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
         cell?.icon.layer.borderWidth = 0
         cell?.selectionStyle = .none
         
-      
+        if settingIcon[indexPath.section].option[indexPath.row].switchHide == false // satırda switch istemiyoruz
+                  {
+            cell?.toggleSwitch.isHidden = true
+       print("saniye")
+                  }
       
         
         cell?.toggleSwitch.tag = indexPath.row + 4*indexPath.section // her bir swice ayrı bir tag verecek
@@ -193,11 +193,7 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
         
        
         
-        if settingIcon[indexPath.section].option[indexPath.row].switchHide == false // satırda switch istemiyoruz
-                  {
-                   cell?.toggleSwitch.isHidden = true
        
-                  }
         return cell!
         
     }

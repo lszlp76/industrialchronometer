@@ -7,8 +7,8 @@ target 'industrialchronometer' do
 
   # Pods for industrialchronometer
 
-pod 'Charts'
-pod 'DLRadioButton', '~> 1.4'
 
+
+pod 'Charts'
 pod 'TinyConstraints'
 end

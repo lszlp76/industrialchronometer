@@ -17,32 +17,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="H6F-N4-JDw">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoLaunch" translatesAutoresizingMaskIntoConstraints="NO" id="3kh-de-GSC">
                                 <rect key="frame" x="0.0" y="48" width="414" height="814"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logoLaunch" translatesAutoresizingMaskIntoConstraints="NO" id="x96-Ym-sZp">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="814"/>
-                                    </imageView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="x96-Ym-sZp" secondAttribute="bottom" id="2UN-Ti-2gY"/>
-                                    <constraint firstAttribute="trailing" secondItem="x96-Ym-sZp" secondAttribute="trailing" id="Kf3-Un-p08"/>
-                                    <constraint firstItem="x96-Ym-sZp" firstAttribute="leading" secondItem="H6F-N4-JDw" secondAttribute="leading" id="V3A-Ny-gKg"/>
-                                    <constraint firstItem="x96-Ym-sZp" firstAttribute="leading" secondItem="H6F-N4-JDw" secondAttribute="leading" id="age-Et-sZk"/>
-                                    <constraint firstAttribute="bottom" secondItem="x96-Ym-sZp" secondAttribute="bottom" id="goH-wz-07F"/>
-                                    <constraint firstItem="x96-Ym-sZp" firstAttribute="top" secondItem="H6F-N4-JDw" secondAttribute="top" id="inf-AT-70R"/>
-                                    <constraint firstItem="x96-Ym-sZp" firstAttribute="top" secondItem="H6F-N4-JDw" secondAttribute="top" id="tDv-XB-ble"/>
-                                    <constraint firstAttribute="trailing" secondItem="x96-Ym-sZp" secondAttribute="trailing" id="tjU-E0-qgH"/>
-                                </constraints>
-                            </stackView>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemGray6Color"/>
                         <constraints>
-                            <constraint firstItem="H6F-N4-JDw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="C3a-F7-2L6"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="H6F-N4-JDw" secondAttribute="bottom" id="Y0H-gN-2Jp"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="H6F-N4-JDw" secondAttribute="trailing" id="nAW-VH-baX"/>
-                            <constraint firstItem="H6F-N4-JDw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="t3U-y6-Y2x"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="3kh-de-GSC" secondAttribute="trailing" id="7DW-u1-cKf"/>
+                            <constraint firstItem="3kh-de-GSC" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="GSk-Rd-Q4f"/>
+                            <constraint firstItem="3kh-de-GSC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="K6z-fR-kMu"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="3kh-de-GSC" secondAttribute="bottom" id="Kwd-9g-P5F"/>
+                            <constraint firstItem="3kh-de-GSC" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="LDU-cg-ZT2"/>
+                            <constraint firstItem="3kh-de-GSC" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="MCx-lt-LLy"/>
+                            <constraint firstItem="3kh-de-GSC" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="rQb-On-bTh"/>
+                            <constraint firstItem="3kh-de-GSC" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="xpe-oa-Xcw"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -52,7 +41,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="logoLaunch" width="1242" height="2688"/>
+        <image name="logoLaunch" width="256" height="256"/>
         <systemColor name="systemGray6Color">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
