@@ -22,7 +22,9 @@ extension UserDefaults {
                 var ScreenSaver = UserDefaults.standard.set(value, forKey: keyName)
             case "PauseLap" :
                 var PauseLap = UserDefaults.standard.set(value, forKey: keyName)
-           
+            case "ActivateOneHunderth":
+                var ActivateOneHunderth = UserDefaults.standard.set(value, forKey: keyName)
+            
             default:
                 return 
             }

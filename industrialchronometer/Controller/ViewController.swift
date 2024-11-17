@@ -14,7 +14,7 @@ import MediaPlayer
 class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSource{
     
     let radioController: RadioButtonController = RadioButtonController()
-    var m = 0 ,h = 0, lapNumber = 0, modul = 0.0 , milis = 0, counter  = 0
+    var m = 0 ,h = 0, lapNumber = 0, modul = 0.0 , milis = 0, counter  = 0, m_text = ""
     var max = 0.0, min = 0.0, ave = 0.0,cycPerMinute = 0.0, cycPerHour = 0.0
     var observationTime : String = " "
     var timeUnit = ""
@@ -23,9 +23,10 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
     var stopTime : Date!
     var laps = [Laps]()
     var pauseLap = false
+    var activateOneHun = false
     var screenSaver = false
     
-    var sendingLapToCSVD = Laps.init(hour: 0, minute: 0, second: 0, msec: 0)
+    var sendingLapToCSVD = Laps.init(hour: 0, minute: 0, second: 0, msec: 0,lapnote: "",lapSay: 0)
     
     
     var lapsVal = LapsVal.init(cycleTime: [])//lapsVal LapsVal içinde float bir dizi olacak
@@ -114,6 +115,18 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
                              
                              // file Name enter
                              let fileNameAlert = UIAlertController (title: "Save Datas", message: "", preferredStyle: .alert)
+            //Message fontu
+            fileNameAlert.setValue(NSAttributedString(string: fileNameAlert.message!, attributes: [NSAttributedString.Key.font :UIFont(name: "DS-Digital", size: 22.0 ),
+                 NSAttributedString.Key.foregroundColor :UIColor(named: "Color")
+                                                                                            
+                ]), forKey: "attributedMessage")
+                                                                                            
+             //Title fonut
+            fileNameAlert.setValue(NSAttributedString(string: fileNameAlert.title!, attributes: [NSAttributedString.Key.font :UIFont(name: "DS-Digital-Bold", size: 25.0),
+                 NSAttributedString.Key.foregroundColor :UIColor(named: "Color")
+                ]), forKey: "attributedTitle")
+            
+          
                              fileNameAlert.addTextField { (textField) in
                                  textField.placeholder = "Your file name..."
                              }
@@ -121,6 +134,7 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
                              fileNameAlert.addAction(UIAlertAction(title: "Save", style: .default, handler: { [weak fileNameAlert] (_) in
                                  guard let textField = fileNameAlert?.textFields?[0],
                                        let fileName = textField.text
+                                        
                                          
                                          
                                          
@@ -144,10 +158,10 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
         else {
             let noLapAlert = UIAlertController(title: " ⚠️ Laps not exist", message: "You have to catch one lap at least", preferredStyle: .alert)
             noLapAlert.setValue(UIImage(named: "cmin"), forKey: "image")
-            noLapAlert.setValue(NSAttributedString(string: noLapAlert.title!, attributes: [NSAttributedString.Key.font : UIFont(name: "DS-Digital-Bold", size: 25.0),
-                                                                                           NSAttributedString.Key.foregroundColor : UIColor(named: "Color")   ]                         ), forKey: "attributedTitle")
-            noLapAlert.setValue(NSAttributedString(string: noLapAlert.message!, attributes: [NSAttributedString.Key.font : UIFont(name: "DS-Digital", size: 22.0),
-                                                                                           NSAttributedString.Key.foregroundColor : UIColor(named: "Color")   ]                         ), forKey: "attributedMessage")
+            noLapAlert.setValue(NSAttributedString(string: noLapAlert.title!, attributes: [NSAttributedString.Key.font : UIFont(name: "DS-Digital-Bold", size: 25.0) as Any,
+                                                                                           NSAttributedString.Key.foregroundColor : UIColor(named: "Color")!   ]                         ), forKey: "attributedTitle")
+            noLapAlert.setValue(NSAttributedString(string: noLapAlert.message!, attributes: [NSAttributedString.Key.font : UIFont(name: "DS-Digital", size: 22.0)!,
+                                                                                             NSAttributedString.Key.foregroundColor : UIColor(named: "Color") as Any   ]                         ), forKey: "attributedMessage")
             
             noLapAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             
@@ -162,13 +176,75 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
      
        
     }
+    /*
+     * this part for volume key controls
+     * listenVolumeButton is to observe one of volume keys pressed ,then it changes volume level
+     * observalue volume key pressed assign method
+     * MPVolumeView extension to set new value of volume level
+     */
+   
+    func listenVolumeButton() {
+        // close volume slider
+        let volumeView = MPVolumeView(frame: .zero)
+            volumeView.clipsToBounds = true
+            view.addSubview(volumeView)
+        
+        let audioSession = AVAudioSession.sharedInstance()
+        do
+        {
+            try audioSession.setActive(true, options: [])
+            audioSession.addObserver(self, forKeyPath: "outputVolume", options: NSKeyValueObservingOptions.new, context: nil)
+            audioLevel = audioSession.outputVolume
+        }
+        catch {
+            print("Error \(error)")
+        }
+        
+    }
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+        if keyPath == "outputVolume"{
+            let audioSession = AVAudioSession.sharedInstance()
+            
+            if audioSession.outputVolume > audioLevel {
+                
+                    startTimer(UIButton.self)
+              
+            }
+            if audioSession.outputVolume < audioLevel {
+                if (isPlaying){
+                takeLap((Any).self)
+                }
+                
+            }
+            
+            audioLevel = audioSession.outputVolume
+            print(" ses seviyesi--> \(audioLevel)")
+            if audioSession.outputVolume > 0.9375{
+                MPVolumeView.setVolume(0.9375)
+                print("volume maxi")
+                print(audioLevel)
+                audioLevel = 0.9375
+            }
+            if audioSession.outputVolume < 0.0625 {
+                MPVolumeView.setVolume(0.9375)
+
+                print("volume mini")
+                print(audioLevel)
+                audioLevel = 0.9375
+
+            }
+            
+        }
+        
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         //self.lapListTableView.backgroundColor = UIColor.s
         listenVolumeButton()
         self.view.backgroundColor = UIColor.systemBackground
         
-        print("cmin seçili mi \(userDefault.getValueForSwitch(keyName: "CminUnit"))")
+        print("cmin seçili mi \(String(describing: userDefault.getValueForSwitch(keyName: "CminUnit")))")
         if (userDefault.getValueForSwitch(keyName: "CminUnit") == true) {
             modul = 60.0
             milis = 100
@@ -197,7 +273,7 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
             secUnitLabel.text = "NO Unit"
         }
             
-        print("saniye seçili mi \(userDefault.getValueForSwitch(keyName: "SecondUnit"))")
+        print("saniye seçili mi \(String(describing: userDefault.getValueForSwitch(keyName: "SecondUnit")))")
         /*
          Notificationu takip ediyor.Geldikçe selector fonksiyonunu tetikliyor
          */
@@ -206,8 +282,9 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
        
         notificationCenter.addObserver(self, selector: #selector((self.screenSaverOnOff)), name: .screenSaverOff, object: nil)
         notificationCenter.addObserver(self, selector: #selector(self.TimeUnitSelect), name: .timeUnitSelection, object: nil)
-     
-       
+        notificationCenter.addObserver(self, selector: #selector(self.ActivateOneHunderth), name: .activateOneHunderth, object: nil)
+        
+        
         timeLabel.textColor = UIColor(named: "Color")
         
         aveCycTimeLabel.textColor = UIColor(named : "Color")
@@ -272,8 +349,8 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
         
         // ilk açıldığında default olarak seçilen buton
         //      radioController.defaultButton = btnSecond
-        
-        lapListTableView.delegate = self
+       
+          lapListTableView.delegate = self
         lapListTableView.dataSource = self
         
     }
@@ -283,10 +360,11 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
             print("Saniye açıldı")
             userDefault.setValueForSwitch(value: true, keyName: "SecondUnit") //saniyeyi açtı
             userDefault.setValueForSwitch(value: false, keyName: "CminUnit")//cmin kapattı
+         
             modul = 100.0
             milis = 60
             timeUnit = "Sec."
-            secUnitLabel.text = "Second"
+            secUnitLabel.text = "Sec."
             secUnitLabel.backgroundColor = UIColor.systemBackground
            
             
@@ -298,7 +376,7 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
             modul = 60.0
             milis = 100
             timeUnit = "Cmin."
-            secUnitLabel.text = "Cminute"
+            secUnitLabel.text = "Cmin."
             secUnitLabel.backgroundColor = UIColor.systemBackground
             
         }
@@ -333,34 +411,47 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
             userDefault.setValueForSwitch(value: false, keyName: "PauseLap")
         }
     }
+    @objc func ActivateOneHunderth(){
+        if userDefault.getValueForSwitch(keyName: "ActivateOneHunderth") == false {
+            activateOneHun = true
+        print( "100 luk on")
+            userDefault.setValueForSwitch(value: true, keyName: "ActivateOneHunderth")
+           
+        }else {
+            activateOneHun = false
+            print( "Activate1/100 Off")
+            userDefault.setValueForSwitch(value: false, keyName: "ActivateOneHunderth")
+        }
+    }
     /**
      Lap tuşuna basıldıkça timer üzerindeki değeri alacak.
      */
     @IBAction func takeLap(_ sender: Any) {
         
         
-        
+        m_text = "" //lapnote almak için her seferinde 0 laman gerekir
         var delta , delta0 , delta1  : Float
-        let lap = Laps(hour: h, minute: m, second: counter, msec: mscd)
         delta = 0
         delta0 = 0
         delta1 = 0
-        laps.append(lap)
+        let lap = Laps(hour: h, minute: m, second: counter, msec: mscd,lapnote: m_text,lapSay: lapNumber+1)
+        
         if lapNumber > 0 {
             
             
-            delta1 = (Float(laps[lapNumber].hh)/60 + Float(laps[lapNumber].mm) + Float(laps[lapNumber].ss)/Float(milis) )
+            delta1 = (Float(lap.hh)/60 + Float(lap.mm) + Float(lap.ss)/Float(milis) )
             delta0 = ( Float(laps[lapNumber-1].hh/60) + Float(laps[lapNumber-1].mm) + Float(laps[lapNumber-1].ss)/Float(milis))
             
             delta = (delta1-delta0 )
             
-            
+            laps.append(lap)
             
             lapsVal.cycleTime.append(delta) // iki lap arasındaki farkı cycletime dizisine atıyor
         }
         
         else {
-            
+            //let lap = Laps(hour: h, minute: m, second: counter, msec: mscd,lapnote: m_text,lapSay: lapNumber+1)
+            laps.append(lap)
             delta = (Float(laps[0].hh/60) + Float(laps[0].mm) + Float(laps[0].ss)/Float(milis))
             
             
@@ -558,7 +649,7 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
         startButton.setTitle("Continue", for: .normal)
         
         stopTime = lapsVal.setMomentTime()
-        print(stopTime)
+        print(stopTime!)
         titleButton = "Start"
         observationTime = lapsVal.getObservationTime(start: startTime, end: stopTime)
         observationTimer.text = observationTime
@@ -688,10 +779,10 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
         }
         
         /* HARFLERİN BİR KISMINI FARKLI KARAKTERDE YAZMAK*/
-        var timerText = String(String(String(hr).reversed()).padding(toLength: 2, withPad: "0", startingAt: 0).reversed()) + ":" + String(String(String(mn).reversed()).padding(toLength: 2, withPad: "0", startingAt: 0).reversed()) + ":" + String(String(String(scd).reversed()).padding(toLength: 2, withPad: "0", startingAt: 0).reversed()) +  "." + String(String(String(mscd).reversed()).padding(toLength: 2, withPad: " ", startingAt: 0).reversed())
+        let timerText = String(String(String(hr).reversed()).padding(toLength: 2, withPad: "0", startingAt: 0).reversed()) + ":" + String(String(String(mn).reversed()).padding(toLength: 2, withPad: "0", startingAt: 0).reversed()) + ":" + String(String(String(scd).reversed()).padding(toLength: 2, withPad: "0", startingAt: 0).reversed()) +  "." + String(String(String(mscd).reversed()).padding(toLength: 2, withPad: " ", startingAt: 0).reversed())
         
-        var slsText = NSMutableAttributedString.init(string: timerText)
-        slsText.setAttributes([NSMutableAttributedString.Key.font: UIFont(name: "DS-Digital", size: 20.0)], range: NSMakeRange(8,3))
+        let slsText = NSMutableAttributedString.init(string: timerText)
+        slsText.setAttributes([NSMutableAttributedString.Key.font: UIFont(name: "DS-Digital", size: 20.0)!], range: NSMakeRange(8,3))
         
         //timeLabel.text = (String ( format: "%02ld:%02ld:%02ld.%02ld" ,h,m,counter,mscd))
         timeLabel.attributedText =  slsText
@@ -719,24 +810,78 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
         
         
     }
-    
+    var dizi = [ "lklk","şlşlş","lşlş","llili"]
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return lapsVal.cycleTime.count
+        return  lapsVal.cycleTime.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let lapCell = self.lapListTableView.dequeueReusableCell(withIdentifier: "lapList", for: indexPath) as! LapListCellTableViewCell
+    
+    
+    /*
+     INPUT TEXT KISMI
+     
+   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+       
+      
+       //alert dialog box yapısı
+       let notetextAlert = UIAlertController(title:"Add notes for lap \(lapListLapNumberValue[indexPath.row])", message: "deneme \(indexPath.row)",preferredStyle: .alert)
+       notetextAlert.addTextField{ [self]
+           field in
+           if (laps[self.lapNumber-indexPath.row-1].lapnote == "")
+           {
+               field.placeholder = "Your note here..."
+               
+               
+           }else
+           {field.text = laps[self.lapNumber-indexPath.row-1].lapnote}
+           
+          
+           field.returnKeyType = .next
+          // field.keyboardType = .default
+       }
+       
+  // https://www.youtube.com/watch?v=xLWfJIYg2PM
+       notetextAlert.addAction(UIAlertAction(title: "Add", style: .default, handler: 
+                                                {[weak notetextAlert](_) in
+          
+               let textFields = notetextAlert?.textFields![0]
+           self.m_text = (textFields?.text)!
+           self.laps[self.lapNumber-indexPath.row-1].lapnote = self.m_text
+           print("Text field değeri --> \(self.m_text)")
+           
+          
+       }))
+           
       
        
-        //        if #available(iOS 14.0, *) {
-        //            var contentLapList = lapCell.defaultContentConfiguration()
-        //            var reverseOrderedLaps : [Float] = Array(lapsVal.cycleTime.reversed())
-        //
-        //            lapCell.lapValueLabel!.text = (String (format: "%.2f",(reverseOrderedLaps[indexPath.row] * Float( milis))))
-        //
-        //            lapCell.lapNumberLabel.text = String (reverseOrderedLaps.count)
-        //            lapCell.contentConfiguration = contentLapList
-        //        } else {
+       let noteCancel = UIAlertAction(title: "Cancel", style: .cancel,handler: nil)
+       
+       notetextAlert.addAction(noteCancel)
+       self.present(notetextAlert,animated: true,completion: nil)
+   }
+    
+    */
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let lapCell = self.lapListTableView.dequeueReusableCell(withIdentifier: "lapList", for: indexPath) as! LapLineViewControllerTableViewCell
+        
+        lapCell.cellDelegate = self
+        lapCell.index = indexPath
+        let reverseOrderedLaps : [Float] = Array(lapsVal.cycleTime.reversed())
+        
+        lapCell.lapValue.text = (String (format: "%.2f",(reverseOrderedLaps[indexPath.row] * Float( milis))))
+        lapCell.lapLabel.text = String(lapListLapNumberValue[indexPath.row])
+        lapCell.lapCycle.text = totalTimeArrayForLapList[indexPath.row]
+        
+        
+        lapCell.lapValue.textColor =  UIColor(named : "Color")
+        lapCell.lapLabel.textColor =  UIColor(named : "Color")
+        lapCell.lapCycle.textColor =  UIColor(named : "Color")
+        lapCell.AddNote.tintColor = UIColor(named : "Color")
+       // lapCell.AddNote.tag = indexPath.row
+        //lapCell.AddNote.addTarget(self, action: #selector(addNotes(sender: )), for: .touchUpInside)
+        
+       
         switch indexPath.row % 2 {
         case 0:
             lapCell.backgroundColor = UIColor(named: "ColorForLapTableView0")
@@ -745,88 +890,63 @@ class ViewController: UIViewController , UITableViewDelegate, UITableViewDataSou
         default:
             lapCell.backgroundColor = .systemBlue
         }
-        let reverseOrderedLaps : [Float] = Array(lapsVal.cycleTime.reversed())
-        
-        lapCell.lapValueLabel.text = (String (format: "%.2f",(reverseOrderedLaps[indexPath.row] * Float( milis))))
-        lapCell.lapNumberLabel.text = String(lapListLapNumberValue[indexPath.row])
-        lapCell.totalTimeLabel.text = totalTimeArrayForLapList[indexPath.row]
-        
-        
-        lapCell.lapValueLabel.textColor =  UIColor(named : "Color")
-        lapCell.lapNumberLabel.textColor =  UIColor(named : "Color")
-        lapCell.totalTimeLabel.textColor =  UIColor(named : "Color")
-        //}
-        
         return lapCell
         
     }
-    
-    /*
-     * this part for volume key controls
-     * listenVolumeButton is to observe one of volume keys pressed ,then it changes volume level
-     * observalue volume key pressed assign method
-     * MPVolumeView extension to set new value of volume level
-     */
-   
-    func listenVolumeButton() {
-        // close volume slider
-        let volumeView = MPVolumeView(frame: .zero)
-            volumeView.clipsToBounds = true
-            view.addSubview(volumeView)
-        
-        let audioSession = AVAudioSession.sharedInstance()
-        do
-        {
-            try audioSession.setActive(true, options: [])
-            audioSession.addObserver(self, forKeyPath: "outputVolume", options: NSKeyValueObservingOptions.new, context: nil)
-            audioLevel = audioSession.outputVolume
-        }
-        catch {
-            print("Error \(error)")
-        }
-        
+    @objc func addNotes ( sender:UIButton){
+        print("şimdi basıldı \(sender.tag)")
     }
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+   
+    
+    
+}
+extension ViewController : SupportedFeaturesForLapLine{
+    func onAddLapNotes(index: Int) {
+       // print ("Basılan satır no su için not \(index)")
         
-        if keyPath == "outputVolume"{
-            let audioSession = AVAudioSession.sharedInstance()
-            
-            if audioSession.outputVolume > audioLevel {
+        let notetextAlert = UIAlertController(title:"Add notes for lap \(lapListLapNumberValue[index])", message: "",preferredStyle: .alert)
+        //Title fonut
+        notetextAlert.setValue(NSAttributedString(string: notetextAlert.title!, attributes: [NSAttributedString.Key.font :UIFont(name: "DS-Digital-Bold", size: 25.0) as Any,
+                                                                                            NSAttributedString.Key.foregroundColor :UIColor(named: "Color") as Any
+           ]), forKey: "attributedTitle")
+        notetextAlert.addTextField{ [self]
+            field in
+            if (laps[self.lapNumber-index-1].lapnote == "")
+            {
+                field.placeholder = "Your note here..."
                 
-                    startTimer(UIButton.self)
-              
-            }
-            if audioSession.outputVolume < audioLevel {
-                if (isPlaying){
-                takeLap((Any).self)
-                }
                 
-            }
+            }else
+            {field.text = laps[self.lapNumber-index-1].lapnote}
             
-            audioLevel = audioSession.outputVolume
-            print(" ses seviyesi--> \(audioLevel)")
-            if audioSession.outputVolume > 0.9375{
-                MPVolumeView.setVolume(0.9375)
-                print("volume maxi")
-                print(audioLevel)
-                audioLevel = 0.9375
-            }
-            if audioSession.outputVolume < 0.0625 {
-                MPVolumeView.setVolume(0.9375)
-
-                print("volume mini")
-                print(audioLevel)
-                audioLevel = 0.9375
-
-            }
-            
+           
+            field.returnKeyType = .next
+           // field.keyboardType = .default
         }
+        
+   // https://www.youtube.com/watch?v=xLWfJIYg2PM
+        notetextAlert.addAction(UIAlertAction(title: "Add", style: .default, handler:
+                                                 {[weak notetextAlert](_) in
+           
+                let textFields = notetextAlert?.textFields![0]
+            self.m_text = (textFields?.text)!
+            self.laps[self.lapNumber-index-1].lapnote = self.m_text
+            print("Text field değeri --> \(self.m_text)")
+            
+           
+        }))
+            
+       
+        
+        let noteCancel = UIAlertAction(title: "Cancel", style: .cancel,handler: nil)
+        
+        notetextAlert.addAction(noteCancel)
+        self.present(notetextAlert,animated: true,completion: nil)
         
     }
     
     
 }
-
 /*
  timeInterval değeri 1 ise 1 snde 1 artırır. 0.6 yaparsan cmin oluyor
  counter 1 artırırsan saniye veya saat formatına çevireblirsin

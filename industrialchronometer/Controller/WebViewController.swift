@@ -26,6 +26,7 @@ class WebViewController: UIViewController, WKNavigationDelegate {
     @IBOutlet weak var webPageView: WKWebView!
     override func viewDidLoad() {
         super.viewDidLoad()
+       
        var link = ""
         switch chosen {
         case (0,1) :

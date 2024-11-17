@@ -8,7 +8,7 @@
 import UIKit
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 //https://www.appsdeveloperblog.com/customize-uinavigationbar-appearance-programmatically-via-appdelegate/
     
@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         //launch screen açılışta bekleme süresi
 
-     Thread.sleep(forTimeInterval: 2)
+     Thread.sleep(forTimeInterval: 1)
    
         //red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
         UINavigationBar.appearance().barTintColor = UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
@@ -61,6 +61,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
+        
+        
+        
+    
+        let navBarAppearance = UINavigationBarAppearance()
+      
+       
+        
+      navBarAppearance.configureWithOpaqueBackground()
+       
+                    navBarAppearance.backgroundColor = UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
+        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white,.font : UIFont(name: "DS-Digital", size: 30.0)]
+        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white,.font : UIFont(name: "DS-Digital", size: 32.0)]
+        
+                    UINavigationBar.appearance(whenContainedInInstancesOf: [UINavigationController.self]).standardAppearance = navBarAppearance
+                    UINavigationBar.appearance(whenContainedInInstancesOf: [UINavigationController.self]).scrollEdgeAppearance = navBarAppearance
+       
+            
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
 

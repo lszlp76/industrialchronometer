@@ -1,6 +1,0 @@
-framework module Pods_industrialchronometer_industrialchronometerUITests {
-  umbrella header "Pods-industrialchronometer-industrialchronometerUITests-umbrella.h"
-
-  export *
-  module * { export * }
-}

@@ -8,15 +8,22 @@
 import Foundation
 struct Laps {
     
-    var hh ,mm, ss , msec: Int
+    var hh ,mm, ss , msec, lapSay: Int
+    var lapnote :String = ""
     var csvString : String = ""
     
-    init(hour : Int, minute :Int, second : Int , msec : Int){
+    init(hour : Int, minute :Int, second : Int , msec : Int,lapnote:String,lapSay:Int){
         self.hh = hour
         self.mm = minute
         self.ss = second
         self.msec = msec
+        self.lapnote = lapnote
+        self.lapSay = lapSay
+        
+        
+        
     }
+    
     
     func LapToString (laps : Laps) -> String{
         
@@ -45,7 +52,7 @@ struct Laps {
         self.csvString = self.csvString.appending("Maximum Cycle Time , \(maximumCycleTime)\n")
         self.csvString = self.csvString.appending("Minimum Cycle Time , \(minimumCycleTime)\n")
         self.csvString = self.csvString.appending("Average Cycle Time , \(averageCycleTime)\n\n")
-        self.csvString = self.csvString.appending("Lap No , Lap Time , Cycle Time as \(timeUnit) \n")
+        self.csvString = self.csvString.appending("Lap No , Lap Time , Cycle Time as \(timeUnit) ,Notes\n")
         
         /*
          this part for writing lap data in csv table
@@ -53,7 +60,7 @@ struct Laps {
         for lapValue in lapsVal
         {
             
-            self.csvString = self.csvString.appending("\(lapNumber+1),\(LapToString(laps: lapToString[lapNumber])),\(String(format:"%.2f",lapValue * Float(milis))) \n")
+            self.csvString = self.csvString.appending("\(lapNumber+1),\(LapToString(laps: lapToString[lapNumber])),\(String(format:"%.2f",lapValue * Float(milis))),\(lapToString[lapNumber].lapnote) \n")
             
             lapNumber += 1
         }

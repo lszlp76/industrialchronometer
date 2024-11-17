@@ -12,4 +12,5 @@ extension Notification.Name {
     static let timeUnitSelection = Notification.Name("timeUnitSelection")
     static let timerStart = Notification.Name("timerStart")
     static let screenSaverOff = Notification.Name("screenSaverOff")
+    static let activateOneHunderth = Notification.Name("Activate1/100")
 }

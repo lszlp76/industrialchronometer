@@ -9,6 +9,7 @@ import UIKit
 import Charts
 import TinyConstraints
 
+
 class ChartUIViewController: UIViewController {
 
     lazy  var lineChartView : LineChartView = {

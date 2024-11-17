@@ -18,7 +18,7 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
     var chosen : ( Int,Int) = (0,0)
     var switchON : Bool?  // krono çalışmaz ise true olacak. timerStart a göre
     var selectedSwitchIndex: Int? = 0
-        
+    var screenSaverText :String = ""
     let userDefaults = UserDefaults.standard
     
     override func willMove(toParent parent: UIViewController?) {
@@ -28,9 +28,14 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
         
         
         self.settingIcon.append(Section(title: "Settings", option: [
-                                                                    SettingIcon(label: "Screen saver on",icon: UIImage(systemName: "display"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true), SettingIcon(label: "Time unit second",icon: UIImage(systemName: "s.circle.fill"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true),
-                                                                    SettingIcon(label: "Time unit hunderths of minute",icon: UIImage(named: "cmin"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true),
+                                                                    SettingIcon(label: "Screen saver activate",icon: UIImage(systemName: "display"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true), SettingIcon(label: "Time unit second",icon: UIImage(systemName: "s.circle.fill"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true),
+                                                                   
+                                                                    SettingIcon(label: "Time unit hundredths of minute",icon: UIImage(named: "cmin"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true),
+                                                                    /*
+                                                                    SettingIcon(label: "1/100 active",icon: UIImage(systemName:"timelapse"), iconBackgroundColor: UIColor.blue,width: 20.0,heigth: 20.0, handler: { },switchHide: true),*/
+                                                                           
           SettingIcon(label: "Pause lap active",icon: UIImage(systemName:"timelapse"), iconBackgroundColor: UIColor.blue,width: 20.0,heigth: 20.0, handler: { },switchHide: true)
+                                                             
                                                                     
                                                                     
                                                                    ]))
@@ -47,12 +52,10 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
         tableView.delegate = self
         tableView.dataSource = self
         
+          configureAboutList() // tableview deki ikonları setleme
         
-      
-        configureAboutList() // tableview deki ikonları setleme
-        
-        print("korno kapalı ise switch on true olacak \(TimerStartControl.timerStartControl.timerStarted)")
-        
+        print("krono kapalı ise switch on true olacak \(String(describing: TimerStartControl.timerStartControl.timerStarted))")
+       
         // Do any additional setup after loading the view.
     }
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
@@ -64,6 +67,10 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
    
         
      
+    }
+    //sectionların yükseliğini ayarlıyor
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 15.0
     }
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let headerTitles = (settingIcon[section].title)
@@ -87,22 +94,31 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
         let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? LapListCellTableViewCell
         
         if indexPath.section < 1{
+            //satırdaki swicthleri tanıtma
         switch indexPath.row{
     
-        case 3:
+        case 4:
+            /*
+             Satır içine toogle switch eklediğinde tableview reload yaparsa toogle switchh
+             kayboluyor. Bunu engellemek için her seferinde isHidden = false diyerek
+             kaybolmasını engelle
+             */
+            cell?.toggleSwitch.isHidden = false // sürekli olarak kaybolmasını engellemek için
         if userDefaults.getValueForSwitch(keyName: "PauseLap") == false
         {
             cell?.toggleSwitch.setOn(false, animated: false) // sayfa açıldığında swici off tutacak
-        }else if userDefaults.getValueForSwitch(keyName: "PauseLap") == true {
+        }else
+            {
             cell?.toggleSwitch.setOn(true, animated: false)
+          
         }
          
-           
+        
         case 0:
             if userDefaults.getValueForSwitch(keyName: "ScreenSaver") == false
             {
                 cell?.toggleSwitch.setOn(false, animated: false) // sayfa açıldığında swici off tutacak
-            }else if userDefaults.getValueForSwitch(keyName: "ScreenSaver") == true {
+            }else {
                 cell?.toggleSwitch.setOn(true, animated: false)
           
             }
@@ -122,9 +138,19 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
             }else{
                 cell?.toggleSwitch.setOn(false, animated: false)
             }
+        case 3:
+           
+            
+            if userDefaults.getValueForSwitch(keyName: "ActivateOneHunderth") == false
+            {
+                cell?.toggleSwitch.setOn(false, animated: false) // sayfa açıldığında swici off tutacak
+            }else
+            {
+                cell?.toggleSwitch.setOn(true, animated: false)
+            }
        
-        default:
-            return cell!
+        default: break
+            
         }
             
         }
@@ -150,13 +176,17 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
         cell?.icon.layer.borderWidth = 0
         cell?.selectionStyle = .none
         
-        if settingIcon[indexPath.section].option[indexPath.row].switchHide == false // satırda switch istemiyoruz
-                  {
-            cell?.toggleSwitch.isHidden = true
-       print("saniye")
-                  }
       
-        
+            
+            
+            
+            if settingIcon[indexPath.section].option[indexPath.row].switchHide == false // satırda switch istemiyoruz
+            {
+                cell?.toggleSwitch.isHidden = true
+                
+            }
+            
+       
         cell?.toggleSwitch.tag = indexPath.row + 4*indexPath.section // her bir swice ayrı bir tag verecek
       
        // give tag to each toggle switch
@@ -229,10 +259,13 @@ class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewData
             
             print("cmin")
         }
-        else if sender.tag == 3 {
+        else if sender.tag == 4 {
             NotificationCenter.default.post(name: .pauseLapOff, object: nil)
+            sender.isHidden = false
         }
-        
+        else if sender.tag == 3 {
+            NotificationCenter.default.post(name: .activateOneHunderth, object: nil)
+        }
 //            guard (sender.isOn ) else {
 //
 //                // selectedSwştchIndex i nil yapıyor eğer switch kapatıldı ise

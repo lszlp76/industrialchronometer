@@ -8,17 +8,13 @@
 import UIKit
 
 class LapListCellTableViewCell: UITableViewCell {
-   /** Lap tableview components */
-    @IBOutlet weak var lapNumberLabel: UILabel!
-    @IBOutlet weak var lapValueLabel: UILabel!
-    
-    @IBOutlet weak var totalTimeLabel: UILabel!
-    
+  
     
     /** About tableView components */
     @IBOutlet weak var aboutLabel: UILabel!
     @IBOutlet weak var toggleSwitch: UISwitch!
     @IBOutlet weak var icon: UIImageView!
+    
     
    
     

@@ -10,13 +10,17 @@ import UIKit
 class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     let pg = UIPageViewController()
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-      
+        
+        
+       
+    
         guard let viewControllerIndex = orderedViewControllers.index(of: viewController) else {
             return nil
         }
         
         let previousIndex = viewControllerIndex - 1
-        if previousIndex < 3 { title = "Industrial Chronometer"
+        if previousIndex < 3 { title = "Chronometer"
+            
 }
        
         guard previousIndex >= 0 else {
@@ -29,7 +33,10 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
         return orderedViewControllers[previousIndex]
     }
     
-    
+    override func willMove(toParent parent: UIViewController?) {
+        
+       
+    }
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let viewControllerIndex = orderedViewControllers.firstIndex(of: viewController) else {
             return nil
@@ -54,14 +61,31 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource = self
-        title = "Industrial Chronometer"
-        let appearence =   self.navigationController?.navigationBar
-        appearence?.barTintColor = UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
-        appearence?.titleTextAttributes = [NSAttributedString.Key.font: UIFont(name: "DS-Digital", size: 22.0)]
+       
         
+        /*
+         * Navbar özelliklerini appdelegate üzerinde tamamlıyorsun
+         * buralarda ise title vs. gibi temel fonksiyonları yazıyorsun
+         */
+        self.navigationItem.title = "Chronometer"
+        
+        
+        
+      
+//        self.navigationController?.navigationBar.titleTextAttributes = attributes as [NSAttributedString.Key
+//        : Any]
+//        //let appearence =   self.navigationController?.navigationBar
+        //appearence?.topItem?.title = "Industrial Chronometer"
+        //appearence?.topItem?.titleView?.tintColor = UIColor(named: "Color")
+        //appearence?.tintColor = UIColor(named: "Color") //(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
+        
+       // let attributes = [NSAttributedString.Key.font: UIFont(name: "DS-Digital", size: 5.0) ,NSAttributedString.Key.foregroundColor: UIColor(named: "Color")]
+       
+        //self.navigationController?.navigationBar.titleTextAttributes = attributes as [NSAttributedString.Key: Any]
         //https://stackoverflow.com/questions/39438606/change-navigation-bar-title-font-swift
     
         //menu butonu eklemek
+        
         let menu =  UIBarButtonItem (image: UIImage(named: "menu"), style: .plain, target: self , action: #selector(callSettingsMenu))
         
         self.navigationItem.leftBarButtonItem = menu
