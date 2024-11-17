@@ -72,8 +72,8 @@ import UIKit
       navBarAppearance.configureWithOpaqueBackground()
        
                     navBarAppearance.backgroundColor = UIColor(red: 0.85, green: 0.11, blue: 0.38, alpha: 1.00)
-        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white,.font : UIFont(name: "DS-Digital", size: 30.0)]
-        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white,.font : UIFont(name: "DS-Digital", size: 32.0)]
+        navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white,.font : UIFont(name: "DS-DIGI.ttf", size: 30.0)]
+        navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white,.font : UIFont(name: "DS-DIGI.ttf", size: 32.0)]
         
                     UINavigationBar.appearance(whenContainedInInstancesOf: [UINavigationController.self]).standardAppearance = navBarAppearance
                     UINavigationBar.appearance(whenContainedInInstancesOf: [UINavigationController.self]).scrollEdgeAppearance = navBarAppearance
