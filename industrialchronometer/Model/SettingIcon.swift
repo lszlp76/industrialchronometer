@@ -15,6 +15,9 @@ struct SettingIcon {
     let heigth : Float?
     var handler : (() -> Void)?
     var switchHide : Bool
+    var isSlider: Bool = false // YENİ: Varsayılan olarak false
+    var isSegment: Bool = false // <--- YENİ EKLENEN
+    
 }
 
 struct Section {

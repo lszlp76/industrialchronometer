@@ -10,6 +10,7 @@
 import UIKit
 import Charts
 import TinyConstraints
+import DGCharts
 
 class ChartViewController: UIViewController {
     

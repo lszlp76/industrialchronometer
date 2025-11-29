@@ -47,6 +47,36 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
+    // SceneDelegate.swift içine:
 
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        guard let url = URLContexts.first?.url else { return }
+        
+        // Ana ViewController'a ulaşmaya çalışıyoruz
+        if let windowScene = scene as? UIWindowScene,
+           let window = windowScene.windows.first,
+           let rootVC = window.rootViewController {
+            
+            // Hiyerarşide ViewController'ı bul
+            var targetVC: ViewController?
+            
+            // 1. Navigation Controller içindeyse
+            if let nav = rootVC as? UINavigationController {
+                // Navigation içinde PageViewController olabilir
+                if let pageVC = nav.viewControllers.first as? PageViewController {
+                    targetVC = pageVC.orderedViewControllers.first as? ViewController
+                } else {
+                    targetVC = nav.viewControllers.first as? ViewController
+                }
+            }
+            // 2. Direkt PageViewController ise
+            else if let pageVC = rootVC as? PageViewController {
+                targetVC = pageVC.orderedViewControllers.first as? ViewController
+            }
+            
+            // Bulduysak komutu ilet
+            targetVC?.handleDeepLink(url: url)
+        }
+    }
 }
 

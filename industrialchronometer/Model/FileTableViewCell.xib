@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" restorationIdentifier="fileNameCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="fileNameCell" id="KGk-i7-Jjw" customClass="FileTableViewCell" customModule="industrialchronometer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sRm-jz-wwU">
+                        <rect key="frame" x="16" y="12" width="116" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d5r-eV-pbt" customClass="GlassButton" customModule="industrialchronometer" customModuleProvider="target">
+                        <rect key="frame" x="229" y="9.6666666666666643" width="75" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="75" id="1wW-QY-CLj"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="25" id="u8k-xr-e3x"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="glowColor">
+                                <color key="value" systemColor="systemRedColor"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                        <connections>
+                            <action selector="deleteButtonAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="XnC-nG-U1O"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJX-0F-pbs" customClass="GlassButton" customModule="industrialchronometer" customModuleProvider="target">
+                        <rect key="frame" x="146" y="9.6666666666666643" width="75" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="75" id="kSM-xU-qBT"/>
+                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="25" id="xRF-MT-71p"/>
+                        </constraints>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="color" keyPath="glowColor">
+                                <color key="value" red="0.2668456105" green="0.96611279250000004" blue="0.94573436580000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                        <connections>
+                            <action selector="shareButtonAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="G4g-9X-yQt"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="sRm-jz-wwU" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-121" id="0Vt-fJ-w5e"/>
+                    <constraint firstItem="hJX-0F-pbs" firstAttribute="leading" secondItem="sRm-jz-wwU" secondAttribute="trailing" constant="14" id="RRd-gS-W3H"/>
+                    <constraint firstItem="d5r-eV-pbt" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="T8n-aY-aaz"/>
+                    <constraint firstItem="sRm-jz-wwU" firstAttribute="centerY" secondItem="hJX-0F-pbs" secondAttribute="centerY" id="TAC-Kg-Bl3"/>
+                    <constraint firstItem="sRm-jz-wwU" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="cdv-pR-oEl"/>
+                    <constraint firstItem="hJX-0F-pbs" firstAttribute="baseline" secondItem="d5r-eV-pbt" secondAttribute="baseline" id="fPu-fo-H2k"/>
+                    <constraint firstItem="sRm-jz-wwU" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="jcO-Y0-rPv"/>
+                    <constraint firstItem="d5r-eV-pbt" firstAttribute="leading" secondItem="hJX-0F-pbs" secondAttribute="trailing" constant="8" id="yYz-C7-z5d"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="deleteButton" destination="d5r-eV-pbt" id="Ism-pc-lB7"/>
+                <outlet property="fileNameLabel" destination="sRm-jz-wwU" id="12A-XR-9ta"/>
+                <outlet property="shareButton" destination="hJX-0F-pbs" id="ddg-9D-EF7"/>
+            </connections>
+            <point key="canvasLocation" x="-64.122137404580144" y="76.760563380281695"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

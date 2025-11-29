@@ -3,316 +3,307 @@
 //  industrialchronometer
 //
 //  Created by ulas özalp on 3.02.2022.
+//  Updated for Precision Slider & Disable Logic
 //
 
 import UIKit
 import StoreKit
 
-class AboutViewController: UIViewController ,UITableViewDelegate,UITableViewDataSource {
-    
-    
-    
+class AboutViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
     var settingIcon = [Section]()
+    // ImageView referansı (Dinamik değişim için)
+        private var backgroundImageView: UIImageView?
+        @IBOutlet weak var tableView: UITableView!
+        var chosen: (Int, Int) = (0, 0)
+        let userDefaults = UserDefaults.standard
+        
+        // Timer Durumu: Singleton üzerinden kontrol ediyoruz
+        var isTimerRunning: Bool {
+            // Eğer timer "Stopped" değilse (Running veya Paused), ayarları kilitlemeliyiz.
+            // TimerStartControl.timerStarted değeri true ise timer aktif demektir.
+            return TimerStartControl.timerStartControl.timerStarted ?? false
+        }
     
-    @IBOutlet weak var tableView: UITableView!
-    var chosen : ( Int,Int) = (0,0)
-    var switchON : Bool?  // krono çalışmaz ise true olacak. timerStart a göre
-    var selectedSwitchIndex: Int? = 0
-    var screenSaverText :String = ""
-    let userDefaults = UserDefaults.standard
-    
-    override func willMove(toParent parent: UIViewController?) {
-        print("ok")
-    }
-    func configureAboutList () {
-        
-        
-        self.settingIcon.append(Section(title: "Settings", option: [
-                                                                    SettingIcon(label: "Screen saver activate",icon: UIImage(systemName: "display"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true), SettingIcon(label: "Time unit second",icon: UIImage(systemName: "s.circle.fill"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true),
-                                                                   
-                                                                    SettingIcon(label: "Time unit hundredths of minute",icon: UIImage(named: "cmin"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: true),
-                                                                    /*
-                                                                    SettingIcon(label: "1/100 active",icon: UIImage(systemName:"timelapse"), iconBackgroundColor: UIColor.blue,width: 20.0,heigth: 20.0, handler: { },switchHide: true),*/
-                                                                           
-          SettingIcon(label: "Pause lap active",icon: UIImage(systemName:"timelapse"), iconBackgroundColor: UIColor.blue,width: 20.0,heigth: 20.0, handler: { },switchHide: true)
-                                                             
-                                                                    
-                                                                    
-                                                                   ]))
-        self.settingIcon.append(Section(title: "General", option: [SettingIcon(label: "Policy",icon: UIImage(named: "terms"), iconBackgroundColor: UIColor.blue,width: 20.0,heigth: 20.0, handler: { },switchHide: false),
-                                                                   SettingIcon(label:"About",icon: UIImage(named: "infosvg"), iconBackgroundColor: UIColor.red, width :20.0,heigth :20.0, handler: {},switchHide: false),
-                                                                 SettingIcon(label: "Rate App",icon: UIImage(systemName: "star.fill"), iconBackgroundColor: UIColor.red,width: 20.0,heigth: 20.0,handler: {},switchHide: false)]))
-        
-        
-    }
-    
+  
     override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-          configureAboutList() // tableview deki ikonları setleme
-        
-        print("krono kapalı ise switch on true olacak \(String(describing: TimerStartControl.timerStartControl.timerStarted))")
-       
-        // Do any additional setup after loading the view.
-    }
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        guard let header = view as? UITableViewHeaderFooterView else { return }
-         
-        //header.textLabel?.textColor = UIColor(cgColor: CGColor.init(red: 45/255, green: 34/255, blue: 227/255, alpha: 1))
-       
-        header.textLabel?.font = UIFont(name: "DS-DIGITAL-BOLD", size: 22.0)
-   
-        
-     
-    }
-    //sectionların yükseliğini ayarlıyor
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 15.0
-    }
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let headerTitles = (settingIcon[section].title)
-    
-        return headerTitles
-    }
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return settingIcon.count
-    }
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return settingIcon[section].option.count
-    }
-    @objc func timeUnitOnOFF (){
-        switchON = false
+            super.viewDidLoad()
+        // 1. Arka Plan Kurulumu (Dinamik)
+                setupCommonBackground()
         
         
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? LapListCellTableViewCell
-        
-        if indexPath.section < 1{
-            //satırdaki swicthleri tanıtma
-        switch indexPath.row{
-    
-        case 4:
-            /*
-             Satır içine toogle switch eklediğinde tableview reload yaparsa toogle switchh
-             kayboluyor. Bunu engellemek için her seferinde isHidden = false diyerek
-             kaybolmasını engelle
-             */
-            cell?.toggleSwitch.isHidden = false // sürekli olarak kaybolmasını engellemek için
-        if userDefaults.getValueForSwitch(keyName: "PauseLap") == false
-        {
-            cell?.toggleSwitch.setOn(false, animated: false) // sayfa açıldığında swici off tutacak
-        }else
-            {
-            cell?.toggleSwitch.setOn(true, animated: false)
-          
-        }
-         
-        
-        case 0:
-            if userDefaults.getValueForSwitch(keyName: "ScreenSaver") == false
-            {
-                cell?.toggleSwitch.setOn(false, animated: false) // sayfa açıldığında swici off tutacak
-            }else {
-                cell?.toggleSwitch.setOn(true, animated: false)
-          
-            }
-        case 1 :
-            cell?.toggleSwitch.isHidden = false
-            if userDefaults.getValueForSwitch(keyName: "SecondUnit") == true {
-                cell?.toggleSwitch.setOn(true, animated: false)
-
-            }else {
-                cell?.toggleSwitch.setOn(false, animated: false)
-                
-            }
-        case 2 :
-           
-            if userDefaults.getValueForSwitch(keyName: "CminUnit") == true {
-              cell?.toggleSwitch.setOn(true, animated: false)
-            }else{
-                cell?.toggleSwitch.setOn(false, animated: false)
-            }
-        case 3:
-           
-            
-            if userDefaults.getValueForSwitch(keyName: "ActivateOneHunderth") == false
-            {
-                cell?.toggleSwitch.setOn(false, animated: false) // sayfa açıldığında swici off tutacak
-            }else
-            {
-                cell?.toggleSwitch.setOn(true, animated: false)
-            }
-       
-        default: break
-            
-        }
-            
-        }
-        tableView.rowHeight = 50
-        chosen = (indexPath.row,indexPath.section)
-
-        
-        //cell?.aboutLabel.textColor = UIColor(cgColor: CGColor.init(red: 45/255, green: 34/255, blue: 227/255, alpha: 1))
-        cell?.aboutLabel.sizeToFit()
-        cell?.aboutLabel?.font = UIFont(name: "DS-DIGITAL", size: 20.0)
-        cell?.aboutLabel.textColor = UIColor(named: "Color")
-        cell?.aboutLabel.text = settingIcon[indexPath.section].option[indexPath.row].label
-        
-        cell?.icon.tintColor = settingIcon[indexPath.section].option[indexPath.row].iconBackgroundColor
-        cell?.icon.image =
-        settingIcon[indexPath.section].option[indexPath.row].icon
-        cell?.icon.frame.size.width =
-        CGFloat(settingIcon[indexPath.section].option[indexPath.row].width!)
-        cell?.icon.frame.size.height = CGFloat(settingIcon[indexPath.section].option[indexPath.row].heigth!)
-        
-        cell?.icon.layer.borderColor = UIColor.lightGray.cgColor
-        cell?.icon.layer.cornerRadius = 10
-        cell?.icon.layer.borderWidth = 0
-        cell?.selectionStyle = .none
-        
-      
-            
-            
-            
-            if settingIcon[indexPath.section].option[indexPath.row].switchHide == false // satırda switch istemiyoruz
-            {
-                cell?.toggleSwitch.isHidden = true
-                
-            }
-            
-       
-        cell?.toggleSwitch.tag = indexPath.row + 4*indexPath.section // her bir swice ayrı bir tag verecek
-      
-       // give tag to each toggle switch
-      
-          
-//                let isSelected = cell?.toggleSwitch.tag == selectedSwitchIndex
-//                print("isSelected \(isSelected)")
-//                cell?.toggleSwitch.isOn = isSelected
-      
-        
-        if TimerStartControl.timerStartControl.timerStarted == true {
-            cell?.toggleSwitch.isEnabled = false
-        }else
-        {
-            cell?.toggleSwitch.isEnabled = true
-        }
-       
-//        if indexPath.section == 1 {
-//            if settingIcon[indexPath.section].option[indexPath.row].switchHide == false // satırda switch istemiyoruz
-//           {
-//            cell?.toggleSwitch.isHidden = true
-//
-//           }
-//        }
-      
-        
-        cell?.toggleSwitch.addTarget(self, action: #selector(self.toggleTriggered), for: .primaryActionTriggered)
-        
-        
-        /*üst kapalı alt açık
-         
-         
-         */
-        
-       
-        
-       
-        return cell!
-        
-    }
-    @objc func toggleTriggered (_ sender: UISwitch) {
-       
-        print("sender \(sender.tag)")
-        if sender.tag == 0 {
-            NotificationCenter.default.post(name: .screenSaverOff, object: nil)
-            
-           
-        }
-        else if sender.tag == 1{
-            
-        
-        
-            
-            NotificationCenter.default.post(name: .timeUnitSelection, object: nil)
-         //   NotificationCenter.default.post(name: .pauseLapOff, object: nil)
-//
-//           if (sender.isOn) {
-//                sender.setOn(false, animated: true)
-//
-//            }else
-//            {
-//                sender.setOn(true, animated: true)
-//
-//            }
-//            print("Second ")
-        }
-       
-        else if sender.tag == 2 {
-            NotificationCenter.default.post(name: .timeUnitSelection, object: nil)
-            
-            print("cmin")
-        }
-        else if sender.tag == 4 {
-            NotificationCenter.default.post(name: .pauseLapOff, object: nil)
-            sender.isHidden = false
-        }
-        else if sender.tag == 3 {
-            NotificationCenter.default.post(name: .activateOneHunderth, object: nil)
-        }
-//            guard (sender.isOn ) else {
-//
-//                // selectedSwştchIndex i nil yapıyor eğer switch kapatıldı ise
-//                selectedSwitchIndex = 0
-//                tableView.reloadData()
-//                return
-//            }
-//            selectedSwitchIndex = sender.tag
-        
-        tableView.reloadData()
-        
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
-        chosen = (indexPath.row,indexPath.section)
-        print(chosen)
-        if chosen.1 > 0  && chosen.0 < 2 {
-            self.performSegue(withIdentifier: "toWebPage", sender: nil)
-        }
-        
-         else if chosen.0 == 2  && chosen.1 == 1 {
-             rateApp()
-             print("rate me")
-            // link = "itms-apps://itunes.apple.com/app/" + "GZ94AWJKRA"
-         }
-         
-        
-        
-    }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let destinationVC = segue.destination as! WebViewController
-        destinationVC.chosen = chosen
-        
-    }
-    func rateApp() {
-        if #available(iOS 10.3, *) {
-            SKStoreReviewController.requestReview()
-
-        } else if let url = URL(string: "itms-apps://itunes.apple.com/app/" +  "GZ94AWJKRA") {
-            if #available(iOS 10, *) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-
+            tableView.delegate = self
+            tableView.dataSource = self
+        tableView.backgroundColor = .clear
+        tableView.backgroundView?.backgroundColor = .clear
+            // 1. Screen Saver Varsayılan Ayarı (Default OFF)
+            if userDefaults.object(forKey: "ScreenSaver") == nil {
+                userDefaults.set(false, forKey: "ScreenSaver")
+                UIApplication.shared.isIdleTimerDisabled = false
             } else {
-                UIApplication.shared.openURL(url)
+                // Mevcut ayarı sisteme uygula
+                UIApplication.shared.isIdleTimerDisabled = userDefaults.bool(forKey: "ScreenSaver")
+            }
+            
+            // 2. Precision Varsayılan Ayarı (Default 2)
+            if userDefaults.object(forKey: "PrecisionValue") == nil {
+                userDefaults.set(2, forKey: "PrecisionValue")
+            }
+            
+            configureAboutList()
+        // TEMA DEĞİŞİKLİĞİNİ DİNLE (Anlık arka plan değişimi için)
+                NotificationCenter.default.addObserver(self, selector: #selector(updateThemeBackground), name: .themeChanged, object: nil)
+        }
+    // YENİ: Arka Plan Kurulum Fonksiyonu
+        private func setupCommonBackground() {
+            let bgImage = AppTheme.backgroundImage
+            let bgView = UIImageView(frame: UIScreen.main.bounds)
+            bgView.image = bgImage
+            bgView.contentMode = .scaleAspectFill
+            view.insertSubview(bgView, at: 0)
+            self.backgroundImageView = bgView
+        }
+    // YENİ: Tema Güncelleme Tetikleyicisi
+        @objc func updateThemeBackground() {
+            guard let bgView = self.backgroundImageView else { return }
+            UIView.transition(with: bgView, duration: 0.5, options: .transitionCrossDissolve, animations: {
+                bgView.image = AppTheme.backgroundImage
+            }, completion: nil)
+            
+            // Tablo yazı renklerini güncellemek için reload
+            tableView.reloadData()
+        }
+    override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            // Timer durumu değişmiş olabilir, tabloyu yenileyerek kilitleri güncelle
+            tableView.reloadData()
+        }
+    func configureAboutList() {
+            // Ayarlar Menüsü Yapısı
+            self.settingIcon.append(Section(title: "Settings", option: [
+                // 0: Screen Saver
+                SettingIcon(label: "Screen saver activate", icon: UIImage(systemName: "display"), iconBackgroundColor: AppTheme.Color.iconTint, width: 20.0, heigth: 20.0, handler: {}, switchHide: false),
+                
+                // 1: Second Unit
+                SettingIcon(label: "Second", icon: UIImage(systemName: "s.circle.fill"), iconBackgroundColor: AppTheme.Color.iconTint, width: 20.0, heigth: 20.0, handler: {}, switchHide: false),
+                
+                // 2: Cmin Unit
+                SettingIcon(label: "Hundredths of minute", icon: UIImage(named: "cmin"), iconBackgroundColor: AppTheme.Color.iconTint, width: 20.0, heigth: 20.0, handler: {}, switchHide: false),
+                // 4: PRECISION (Slider)
+                SettingIcon(label: "Precision", icon: UIImage(systemName: "slider.horizontal.3"), iconBackgroundColor: AppTheme.Color.iconTint, width: 20.0, heigth: 20.0, handler: {}, switchHide: true, isSlider: true)
+            ]))
+          self.settingIcon.append(
+                            Section(
+                                title: "General",
+                                option: [
+                                    // YENİ: Theme satırını isSegment: true olarak ayarlıyoruz
+                                    SettingIcon(
+                                        label: "Theme",
+                                        icon: UIImage(systemName: "circle.lefthalf.filled"), // Assets'te 'theme' ikonu olsun
+                                        iconBackgroundColor: AppTheme.Color.iconTint,
+                                        width: 20.0,
+                                        heigth: 20.0,
+                                        handler: {},
+                                        switchHide: true,
+                                        isSegment: true // <--- BU SATIR ÖNEMLİ
+                                    ),
+                                    SettingIcon(
+                                        label: "Policy",
+                                        icon: UIImage(systemName: "doc.text.magnifyingglass"),
+                                        iconBackgroundColor: AppTheme.Color.iconTint,
+                                        width: 20.0,
+                                        heigth: 20.0,
+                                        handler: {
+                                        },
+                                        switchHide: true),
+                                    SettingIcon(
+                                        label: "About",
+                                        icon: UIImage(systemName: "info.circle.fill"),
+                                        iconBackgroundColor: AppTheme.Color.iconTint,
+                                        width: 20.0,
+                                        heigth: 20.0,
+                                        handler: {
+                                        },
+                                        switchHide: true),
+                                    SettingIcon(
+                                        label: "Rate App",
+                                        icon: UIImage(systemName: "star.fill"),
+                                        iconBackgroundColor: AppTheme.Color.iconTint,
+                                        width: 20.0,
+                                        heigth: 20.0,
+                                        handler: {
+                                        },
+                                        switchHide: true)
+                                ]
+                            )
+                        )
+        }
+    // MARK: - TableView Helper Methods
+    func numberOfSections(in tableView: UITableView) -> Int { return settingIcon.count }
+        func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return settingIcon[section].option.count }
+        func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? { return settingIcon[section].title }
+        func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return 30.0 }
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+            guard let header = view as? UITableViewHeaderFooterView else { return }
+        header.textLabel?.font = AppTheme.Font.robotex(size: 25.0)
+            // Başlık rengi de temaya uysun
+        header.textLabel?.textColor = AppTheme.Color.mainText
+        }
+    
+
+    // MARK: - Cell Configuration
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! LapListCellTableViewCell
+        let item = settingIcon[indexPath.section].option[indexPath.row]
+        
+        cell.backgroundColor = .clear
+        cell.backgroundView?.backgroundColor = .clear
+        
+        // Genel Ayarlar
+        cell.aboutLabel.text = item.label
+        cell.aboutLabel.font = AppTheme.Font.robotex(size: 22)
+        cell.aboutLabel.textColor = AppTheme.Color.mainText // Temaya uygun renk
+        cell.precisionLabel.textColor = AppTheme.Color.mainText
+        
+        cell.icon.image = item.icon?.withRenderingMode(.alwaysTemplate)
+        cell.selectionStyle = .none
+        
+        if AppTheme.currentTheme == .dark {
+                    cell.icon.tintColor = AppTheme.Color.iconTint // Krem Beyazı
+                } else {
+                    // Light modda ne istersin?
+                    // Seçenek A: Hepsi Gece Mavisi olsun (Temiz görünüm)
+                    cell.icon.tintColor = AppTheme.Color.iconTint
+                    
+                    // Seçenek B: Orijinal renklerini (Kırmızı/Mavi) korusun
+                    // cell.icon.tintColor = item.iconBackgroundColor
+                }
+        
+        // Kilit Kontrolü
+        let shouldDisable = isTimerRunning
+        
+        // --- GÖRÜNÜRLÜK SIFIRLAMA ---
+        cell.toggleSwitch.isHidden = true
+        cell.precisionSlider.isHidden = true
+        cell.precisionLabel.isHidden = true
+        cell.themeSegment.isHidden = true // Varsayılan gizli
+        
+        // --- 1. SEGMENT (THEME) ---
+                if item.isSegment {
+                    cell.themeSegment.isHidden = false
+                    
+                    // Kayıtlı seçimi yükle (Dark/Light/System)
+                    cell.themeSegment.selectedSegmentIndex = AppTheme.selectedTheme.rawValue
+                    
+                    // Değişim Handler'ı
+                    cell.onThemeChange = { [weak self] index in
+                        // 0: Dark, 1: Light, 2: System
+                        if let newTheme = AppTheme.ThemeType(rawValue: index) {
+                            AppTheme.selectedTheme = newTheme
+                        }
+                        
+                        // Not: AppTheme içindeki setter zaten Notification yolluyor.
+                    }
+                }
+        // --- 2. SLIDER (PRECISION) ---
+        else if item.isSlider {
+            cell.precisionSlider.isHidden = false
+            cell.precisionLabel.isHidden = false
+            
+            cell.precisionSlider.minimumValue = 0
+            cell.precisionSlider.maximumValue = 3
+            
+            let currentPrecision = userDefaults.integer(forKey: "PrecisionValue")
+            cell.precisionSlider.value = Float(currentPrecision)
+            cell.updatePrecisionLabel(for: currentPrecision)
+            
+            cell.precisionSlider.isEnabled = !isTimerRunning
+            cell.precisionSlider.alpha = isTimerRunning ? 0.5 : 1.0
+            cell.precisionLabel.alpha = isTimerRunning ? 0.5 : 1.0
+            
+            cell.onSliderChange = { [weak self] newValue in
+                self?.userDefaults.set(newValue, forKey: "PrecisionValue")
+                NotificationCenter.default.post(name: NSNotification.Name("PrecisionChanged"), object: nil)
+            }
+        }
+        // --- 3. SWITCH (Diğer Ayarlar) ---
+        else if !item.switchHide {
+            cell.toggleSwitch.isHidden = false
+            cell.toggleSwitch.tag = indexPath.row + 4 * indexPath.section
+            
+            switch indexPath.row {
+            case 0: cell.toggleSwitch.isOn = userDefaults.bool(forKey: "ScreenSaver")
+            case 1: cell.toggleSwitch.isOn = userDefaults.bool(forKey: "SecondUnit")
+            case 2: cell.toggleSwitch.isOn = userDefaults.bool(forKey: "CminUnit")
+            default: break
+            }
+            
+            if indexPath.section == 0 {
+                cell.toggleSwitch.isEnabled = !isTimerRunning
+            } else {
+                cell.toggleSwitch.isEnabled = true
+            }
+            
+            cell.toggleSwitch.addTarget(self, action: #selector(toggleTriggered(_:)), for: .valueChanged)
+        }
+        
+        return cell
+    }
+    
+    @objc func toggleTriggered(_ sender: UISwitch) {
+            // Timer çalışırken zaten disable olduğu için buraya girmez, güvenlidir.
+            
+            if sender.tag == 0 {
+                // SCREEN SAVER MANTIĞI
+                let isOn = sender.isOn
+                userDefaults.set(isOn, forKey: "ScreenSaver")
+                // Sistemi güncelle: true ise uyku modu devre dışı (ekran açık kalır)
+                UIApplication.shared.isIdleTimerDisabled = isOn
+                print("Screen Saver Active: \(isOn)")
+            }
+            else if sender.tag == 1 { // Second Unit
+                // Radio Button Mantığı (Biri açılınca diğeri kapanmalı)
+                userDefaults.set(sender.isOn, forKey: "SecondUnit")
+                if sender.isOn { userDefaults.set(false, forKey: "CminUnit") }
+                NotificationCenter.default.post(name: .timeUnitSelection, object: nil)
+            }
+            else if sender.tag == 2 { // Cmin Unit
+                userDefaults.set(sender.isOn, forKey: "CminUnit")
+                if sender.isOn { userDefaults.set(false, forKey: "SecondUnit") }
+                NotificationCenter.default.post(name: .timeUnitSelection, object: nil)
+            }
+            else if sender.tag == 3 {
+                userDefaults.set(sender.isOn, forKey: "ActivateOneHunderth")
+                NotificationCenter.default.post(name: .activateOneHunderth, object: nil)
+            }
+            
+            // Tabloyu yenile ki diğer switchlerin (radio button) durumu güncellensin
+            tableView.reloadData()
+        }
+    
+    // ... (Diğer fonksiyonlar aynen kalabilir) ...
+        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            chosen = (indexPath.row,indexPath.section)
+            if chosen.1 > 0  && chosen.0 < 2 {
+                self.performSegue(withIdentifier: "toWebPage", sender: nil)
+            } else if chosen.0 == 2  && chosen.1 == 1 {
+                 rateApp()
+             }
+        }
+        
+        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            if let destinationVC = segue.destination as? WebViewController {
+                destinationVC.chosen = chosen
+            }
+        }
+        
+        func rateApp() {
+            if #available(iOS 14.0, *) {
+                if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                    SKStoreReviewController.requestReview(in: scene)
+                }
+            } else {
+                SKStoreReviewController.requestReview()
             }
         }
     }
-   
-}

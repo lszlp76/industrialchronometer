@@ -1,26 +1,30 @@
 PODS:
-  - Charts (4.1.0):
-    - Charts/Core (= 4.1.0)
-  - Charts/Core (4.1.0):
-    - SwiftAlgorithms (~> 1.0)
-  - SwiftAlgorithms (1.0.0)
+  - DGCharts (5.1.0):
+    - DGCharts/Core (= 5.1.0)
+  - DGCharts/Core (5.1.0)
+  - Google-Mobile-Ads-SDK (11.12.0):
+    - GoogleUserMessagingPlatform (>= 1.1)
+  - GoogleUserMessagingPlatform (2.7.0)
   - TinyConstraints (4.0.2)
 
 DEPENDENCIES:
-  - Charts
+  - DGCharts
+  - Google-Mobile-Ads-SDK
   - TinyConstraints
 
 SPEC REPOS:
   trunk:
-    - Charts
-    - SwiftAlgorithms
+    - DGCharts
+    - Google-Mobile-Ads-SDK
+    - GoogleUserMessagingPlatform
     - TinyConstraints
 
 SPEC CHECKSUMS:
-  Charts: 354f86803d11d9c35de280587fef50d1af063978
-  SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
+  DGCharts: 1c6daf585b6cfc78807af44ea690d357c410627f
+  Google-Mobile-Ads-SDK: 3a76704456669fbed2057efc8bdb99050ad0e3fb
+  GoogleUserMessagingPlatform: a8b56893477f67212fbc8411c139e61d463349f5
   TinyConstraints: 7b7ccc0c485bb3bb47082138ff28bc33cd49897f
 
-PODFILE CHECKSUM: 222a1d6e9126b0bba670d3b8b00186827ef26d28
+PODFILE CHECKSUM: 90b8e6597a93c21bab28761f69e84cf3d8ad2b50
 
-COCOAPODS: 1.11.0.beta.1
+COCOAPODS: 1.16.2
