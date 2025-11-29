@@ -27,8 +27,8 @@
 		F96C9A0A2ED25C5700F32316 /* GlassButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96C9A092ED25C5700F32316 /* GlassButton.swift */; };
 		F96C9A0C2ED25E5E00F32316 /* NeonButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96C9A0B2ED25E5E00F32316 /* NeonButton.swift */; };
 		F96FDF3B2CD8170700EE9353 /* LapLineViewControllerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F96FDF3A2CD8170700EE9353 /* LapLineViewControllerTableViewCell.swift */; };
-		F9847B9F27C7DD8F00D56BE6 /* todolist in Resources */ = {isa = PBXBuildFile; fileRef = F9847B9E27C7DD8F00D56BE6 /* todolist */; };
 		F98DFDF72EDB68D20045CA94 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98DFDF62EDB68D20045CA94 /* Extension.swift */; };
+		F98DFDFD2EDB9CAD0045CA94 /* Readme.md in Resources */ = {isa = PBXBuildFile; fileRef = F98DFDFC2EDB9CAD0045CA94 /* Readme.md */; };
 		F99595E827CA43CC00D95A72 /* UserDefaultExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99595E727CA43CC00D95A72 /* UserDefaultExtension.swift */; };
 		F99595EA27CA48F100D95A72 /* MPVolumExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F99595E927CA48F100D95A72 /* MPVolumExtension.swift */; };
 		F9B1BD5227A9118D0062B161 /* LapsVal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9B1BD5127A9118D0062B161 /* LapsVal.swift */; };
@@ -112,8 +112,8 @@
 		F96C9A092ED25C5700F32316 /* GlassButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassButton.swift; sourceTree = "<group>"; };
 		F96C9A0B2ED25E5E00F32316 /* NeonButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeonButton.swift; sourceTree = "<group>"; };
 		F96FDF3A2CD8170700EE9353 /* LapLineViewControllerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LapLineViewControllerTableViewCell.swift; sourceTree = "<group>"; };
-		F9847B9E27C7DD8F00D56BE6 /* todolist */ = {isa = PBXFileReference; lastKnownFileType = text; path = todolist; sourceTree = "<group>"; };
 		F98DFDF62EDB68D20045CA94 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		F98DFDFC2EDB9CAD0045CA94 /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Readme.md; sourceTree = "<group>"; };
 		F99595E727CA43CC00D95A72 /* UserDefaultExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultExtension.swift; sourceTree = "<group>"; };
 		F99595E927CA48F100D95A72 /* MPVolumExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVolumExtension.swift; sourceTree = "<group>"; };
 		F9B1BD5127A9118D0062B161 /* LapsVal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LapsVal.swift; sourceTree = "<group>"; };
@@ -215,7 +215,6 @@
 		F92DFA1427A87C5B0094E17D = {
 			isa = PBXGroup;
 			children = (
-				F9847B9E27C7DD8F00D56BE6 /* todolist */,
 				F92DFA1F27A87C5B0094E17D /* industrialchronometer */,
 				F9CCFA922ECCFA1C006EDB25 /* ChronometerWidget */,
 				F92DFA1E27A87C5B0094E17D /* Products */,
@@ -246,6 +245,7 @@
 				F92DFA2E27A87C5C0094E17D /* Info.plist */,
 				F9FA1CD42977DFBA00778299 /* Asset.xcassets */,
 				F9B8B9F22ED1EA7E007121C9 /* fonts */,
+				F98DFDFC2EDB9CAD0045CA94 /* Readme.md */,
 			);
 			path = industrialchronometer;
 			sourceTree = "<group>";
@@ -440,8 +440,8 @@
 			files = (
 				F9FA1CDB2977ED4900778299 /* Asset.xcassets in Resources */,
 				F91141EC2ED3A6D600365F24 /* FileTableViewCell.xib in Resources */,
-				F9847B9F27C7DD8F00D56BE6 /* todolist in Resources */,
 				F9FD76522ECD02970079827E /* Main.storyboard in Resources */,
+				F98DFDFD2EDB9CAD0045CA94 /* Readme.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
